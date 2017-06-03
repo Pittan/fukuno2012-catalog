@@ -19,7 +19,7 @@
       "testTsconfig": "tsconfig.spec.json",
       "prefix": "fc",
       "styles": [
-        "styles.css"
+        "styles.styl"
       ],
       "scripts": [],
       "environmentSource": "environments/environment.ts",

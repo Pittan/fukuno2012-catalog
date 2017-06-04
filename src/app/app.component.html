@@ -1,7 +1,7 @@
 <div class="navi">
   <div class="title">Create Every Day in 2012 / 一日一創2012 (366日分)</div>
   <div class="select-container">
-    <select class="select">
+    <select class="select" (change)="onTagsChange($event.target.value)">
       <option>[ all ]</option>
       <option value="tool">tool</option>
       <option value="content">content</option>

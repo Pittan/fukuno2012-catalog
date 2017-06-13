@@ -7,11 +7,13 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
 
 import { AppComponent } from './app.component';
 import { AppCellComponent } from './app-cell/app-cell.component';
+import { DatePipe } from './date.pipe';
 
 @NgModule({
   declarations: [
     AppComponent,
-    AppCellComponent
+    AppCellComponent,
+    DatePipe
   ],
   imports: [
     BrowserModule,

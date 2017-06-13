@@ -11,17 +11,18 @@ import * as _ from 'lodash';
 })
 export class AppComponent implements OnInit {
 
+  private internalApps: any[] = [];
+
   apps: any[] = [];
   tags: string[] = ['[ all ]'];
+  selectedTag = '[ all ]';
 
   constructor(private http: Http) {  }
 
   // Detect HashChange
   @HostListener('window:hashchange')
   onHashChange() {
-      // reload list with tag search
-      // (Backwards compatibility)
-      console.log('changed')
+    this.search();
   }
 
   ngOnInit() {
@@ -33,14 +34,15 @@ export class AppComponent implements OnInit {
           element.image = 'assets/' + element.name + '.jpg';
         });
 
-        this.apps = data.item.reverse();
+        this.internalApps = data.item.reverse();
         this.makeTags();
+        this.search();
       }
     );
   }
 
   private makeTags() {
-    this.apps.forEach(app => {
+    this.internalApps.forEach(app => {
       app.tag = [];
       const appTags = app.tags.split(',')
       appTags.forEach(tag => {
@@ -57,63 +59,42 @@ export class AppComponent implements OnInit {
 
       });
     });
-
-    console.log(this.tags);
-
-
-
-    console.log(this.apps);
-
-    // for (var i = 0; i < items.length; i++) {
-    //   var item = items[i];
-    //   var tag = item.tags.split(",");
-    //   for (var j = 0; j < tag.length; j++) {
-    //     var s = tag[j].trim();
-    //     if (tags[s] == null) {
-    //       tags[s] = [ s, 0 ];
-    //     } else {
-    //       tags[s][1]++;
-    //     }
-    //   }
-    // }
-
-//     var opt = create("option");
-//     opt.textContent = "[ all ]";
-//     $("tags").appendChild(opt);
-//     var max = 0xffff;
-// //	dump(tags);
-//     for (;;) {
-//       var t = null;
-//       var n = -1;
-//       for (var tag in tags) {
-//         if (tags[tag][1] > n && tags[tag][1] < max) {
-//           t = tags[tag];
-//           n = tags[tag][1];
-//         }
-//       }
-//       max = n;
-//       if (t == null)
-//         break;
-//       for (var tag in tags) {
-//         if (tags[tag][1] == max) {
-//           t = tags[tag];
-//           var opt = create("option");
-//           opt.textContent = opt.value = t[0];
-//           $("tags").appendChild(opt);
-//         }
-//       }
-//     }
-//     $("tags").onchange = function() {
-//       if (this.value == TAG_ALL)
-//         location.hash = "";
-//       else
-//         location.hash = "#" + this.value;
-// //		flow();
-//     };
-
   }
 
   onTagsChange(tag) {
     window.location.hash = tag === '[ all ]' ? '' : tag;
+  }
+
+  search() {
+    this.selectedTag = window.location.hash === '' ? '[ all ]' : window.location.hash.substring(1);
+
+    this.apps = [];
+
+    if (this.selectedTag === '[ all ]') {
+      this.apps = this.internalApps;
+      return;
+    }
+
+    const apps = [];
+
+    this.internalApps.forEach(app => {
+      const appTags = app.tags.split(',');
+
+      appTags.forEach(tag => {
+        const trimmedTag = tag.trim();
+
+        if (trimmedTag === this.selectedTag) {
+          apps.push(app);
+        }
+
+      });
+    });
+
+    this.apps = apps;
+
+    // HACK: ng-lazyload-imageが発火しないので意図的にスクロールする
+    window.scrollTo(window.scrollX, window.scrollY + 1);
+    window.scrollTo(window.scrollX, window.scrollY - 1);
+
   }
 }

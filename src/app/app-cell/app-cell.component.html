@@ -1,0 +1,6 @@
+<div class="image" (click)="openApp()" [lazyLoad]="app.image" [offset]="100"></div>
+<!--<div class="id">ID: {{app.id}}</div>-->
+<div class="title">{{app.title}}</div>
+<div class="tags">
+    <a class="tag" *ngFor="let tag of app.tag; last as isLast" [href]="'#' + tag">{{tag}}</a>
+</div>

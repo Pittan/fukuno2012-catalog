@@ -1,3 +1,12 @@
-<h1>
-  {{title}}
-</h1>
+<div class="navi">
+  <div class="title">Create Every Day in 2012 / 一日一創2012 (366日分)</div>
+  <div class="select-container">
+    <select class="select" (change)="onTagsChange($event.target.value)" [(ngModel)]="selectedTag">
+      <option *ngFor="let tag of tags">{{tag}}</option>
+    </select>
+    <svg viewBox="0 0 12 14" class="triangle"><path d="M0 0l12 7-12 7z"></path></svg>
+  </div>
+</div>
+<div class="app-list">
+  <fc-app-cell class="app" *ngFor="let app of apps" [app]="app"></fc-app-cell>
+</div>

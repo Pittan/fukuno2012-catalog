@@ -39,6 +39,3 @@ script:
   # TODO Add coverage badge
   # - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
   - ng build --prod --progress false
-
-after_success:
-  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && ng github-pages:deploy --message "Deploy from CI"

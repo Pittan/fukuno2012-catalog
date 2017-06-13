@@ -26,7 +26,7 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.http.get('/assets/catalog.json')
+    this.http.get(this.baseUri() + '/assets/catalog.json')
       .subscribe(res => {
         const data = res.json();
 
@@ -96,5 +96,14 @@ export class AppComponent implements OnInit {
     window.scrollTo(window.scrollX, window.scrollY + 1);
     window.scrollTo(window.scrollX, window.scrollY - 1);
 
+  }
+
+  private baseUri() {
+    const baseUri = document.baseURI;
+    if (baseUri) {
+      return baseUri;
+    }
+    const base = document.getElementsByTagName('base')[0];
+    return base.href;
   }
 }

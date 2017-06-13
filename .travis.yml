@@ -1,0 +1,44 @@
+sudo: required
+dist: trusty
+language: node_js
+node_js:
+  - "6.10"
+
+addons:
+apt:
+  sources:
+    - google-chrome
+  packages:
+    - google-chrome-stable
+    - google-chrome-beta
+
+cache: yarn
+
+before_install:
+  - export CHROME_BIN=chromium-browser
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+
+before_script:
+  # Using yarn
+  - yarn global add firebase-tools
+  - yarn global add @angular/cli
+  - export PATH="$PATH:`yarn global bin`"
+  - yarn
+
+  # Using npm
+  # - npm install -g firebase-tools
+  # - npm install -g @angular/cli
+  # - npm install
+
+script:
+  - ng -v
+  - ng lint
+  - ng test --single-run --progress false --reporters coverage-istanbul --code-coverage
+
+  # TODO Add coverage badge
+  # - cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js
+  - ng build --prod --progress false
+
+after_success:
+  - test $TRAVIS_PULL_REQUEST == "false" && test $TRAVIS_BRANCH == "master" && ng github-pages:deploy --message "Deploy from CI"
